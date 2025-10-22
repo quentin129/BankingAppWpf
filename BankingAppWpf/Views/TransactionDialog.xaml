@@ -1,0 +1,174 @@
+﻿<Window x:Class="BankingAppWpf.Views.TransactionDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:converters="clr-namespace:BankingAppWpf.Helper.Converters"
+        xmlns:local="clr-namespace:BankingAppWpf.Views"
+        mc:Ignorable="d"
+        xmlns:vm="clr-namespace:BankingAppWpf.ViewModels"
+        Title="{Binding Title}"
+        Height="500"
+        Width="550"
+        WindowStartupLocation="CenterOwner"
+        ResizeMode="NoResize"
+        Background="#FFF0F0F0">
+
+    <Window.Resources>
+        
+    </Window.Resources>
+
+    <Grid Margin="10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <!-- Input Fields -->
+        <ScrollViewer Grid.Row="0"
+                      VerticalScrollBarVisibility="Auto">
+            <Grid Margin="5">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+
+                <!-- Date -->
+                <Label Grid.Row="0"
+                       Grid.Column="0"
+                       Content="Date *" />
+                <DatePicker Grid.Row="0"
+                            Grid.Column="1"
+                            Grid.ColumnSpan="2"
+                            SelectedDate="{Binding Transaction.Date}"
+                            x:Name="DatePicker" />
+
+                <!-- Amount -->
+                <Label Grid.Row="1"
+                       Grid.Column="0"
+                       Content="Amount *" />
+                <TextBox Grid.Row="1"
+                         Grid.Column="1"
+                         Grid.ColumnSpan="2"
+                         Text="{Binding Transaction.Amount, StringFormat={}{0:N2}}"
+                         MaxLength="15" />
+
+                <!-- Transaction Type -->
+                <Label Grid.Row="2"
+                       Grid.Column="0"
+                       Content="Transaction Type *" />
+                <ComboBox Grid.Row="2"
+                          Grid.Column="1"
+                          Grid.ColumnSpan="2"
+                          ItemsSource="{Binding TransactionTypes}"
+                          SelectedItem="{Binding SelectedTransactionType}">
+                    <ComboBox.ItemTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding Converter={x:Static converters:TransactionTypeConverter.Instance}}" />
+                        </DataTemplate>
+                    </ComboBox.ItemTemplate>
+                </ComboBox>
+
+                <!-- Purpose -->
+                <Label Grid.Row="3"
+                       Grid.Column="0"
+                       Content="Purpose *" />
+                <TextBox Grid.Row="3"
+                         Grid.Column="1"
+                         Grid.ColumnSpan="2"
+                         Text="{Binding Transaction.Purpose, UpdateSourceTrigger=PropertyChanged}"
+                         MaxLength="200"
+                         Height="60"
+                         TextWrapping="Wrap"
+                         AcceptsReturn="True"
+                         VerticalScrollBarVisibility="Auto" />
+
+                <!-- IBAN (Only visible for Transfer transactions) -->
+                <Label Grid.Row="4"
+                       Grid.Column="0"
+                       Content="IBAN *"
+                       Visibility="{Binding ShowIbanField, Converter={x:Static converters:BoolToVisibilityConverter.Instance}}" />
+                <TextBox Grid.Row="4"
+                         Grid.Column="1"
+                         Grid.ColumnSpan="2"
+                         Text="{Binding Transaction.IBAN, UpdateSourceTrigger=PropertyChanged}"
+                         MaxLength="34"
+                         Visibility="{Binding ShowIbanField, Converter={x:Static converters:BoolToVisibilityConverter.Instance}}" />
+
+                <!-- Transaction Number (Automatically generated) -->
+                <Label Grid.Row="5"
+                       Grid.Column="0"
+                       Content="Transaction Number" />
+                <TextBox Grid.Row="5"
+                         Grid.Column="1"
+                         Text="{Binding Transaction.TransactionNumber, UpdateSourceTrigger=PropertyChanged}"
+                         IsReadOnly="True"
+                         Background="LightGray"
+                         MaxLength="50" />
+
+                <!-- Active Checkbox (only in Edit-Mode) -->
+                <CheckBox Grid.Row="6"
+                          Grid.Column="1"
+                          Grid.ColumnSpan="2"
+                          Content="Transaction is active"
+                          IsChecked="{Binding Transaction.IsActive}"
+                          Margin="5"
+                          Visibility="{Binding IsEditMode, Converter={x:Static converters:BoolToVisibilityConverter.Instance}}" />
+
+                <!-- Info Box for Transaction Types -->
+                <Border Grid.Row="7"
+                        Grid.Column="0"
+                        Grid.ColumnSpan="3"
+                        Background="LightYellow"
+                        BorderBrush="DarkGoldenrod"
+                        BorderThickness="1"
+                        Margin="5"
+                        Padding="10">
+                    <StackPanel>
+                        <TextBlock Text="Transaction Types Info:"
+                                   FontWeight="Bold" />
+                        <TextBlock Text="• Withdrawal: Negative amount (outflow)" />
+                        <TextBlock Text="• Deposit: Positive amount (inflow)" />
+                        <TextBlock Text="• Transfer: Can be positive or negative" />
+                        <TextBlock Text="• Incoming: Positive amount (inflow)" />
+                        <TextBlock Text="* Required fields"
+                                   FontWeight="Bold"
+                                   Margin="0,5,0,0" />
+                    </StackPanel>
+                </Border>
+            </Grid>
+        </ScrollViewer>
+
+        <!-- Buttons -->
+        <Border Grid.Row="1"
+                Background="LightGray"
+                Padding="5"
+                Margin="0,10,0,0">
+            <StackPanel Orientation="Horizontal"
+                        HorizontalAlignment="Right">
+                <Button Content="{Binding SaveButtonText}"
+                        Command="{Binding SaveCommand}"
+                        Background="#FF008000"
+                        Foreground="White"
+                        FontWeight="Bold" />
+
+                <Button Content="Cancel"
+                        Command="{Binding CancelCommand}"
+                        Background="#FFDC143C"
+                        Foreground="White" />
+            </StackPanel>
+        </Border>
+    </Grid>
+</Window>

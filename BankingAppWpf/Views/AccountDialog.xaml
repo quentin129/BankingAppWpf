@@ -1,0 +1,137 @@
+﻿<Window x:Class="BankingAppWpf.Views.AccountDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:vm="clr-namespace:BankingAppWpf.ViewModels"
+        xmlns:local="clr-namespace:BankingAppWpf.Views"
+        xmlns:converters="clr-namespace:BankingAppWpf.Helper.Converters"
+        mc:Ignorable="d"
+        Title="{Binding Title}"
+        Height="350"
+        Width="500"
+        WindowStartupLocation="CenterOwner"
+        ResizeMode="NoResize"
+        Background="#FFF0F0F0">
+
+    <Window.Resources>
+       
+    </Window.Resources>
+
+    <Grid Margin="10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <!-- Input Fields -->
+        <Grid Grid.Row="0"
+              Margin="5">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+
+            <!-- Account number -->
+            <Label Grid.Row="0"
+                   Grid.Column="0"
+                   Content="Kontonummer *" />
+            <TextBox Grid.Row="0"
+                     Grid.Column="1"
+                     Text="{Binding Account.AccountNumber, UpdateSourceTrigger=PropertyChanged}"
+                     x:Name="AccountNumberTextBox"
+                     MaxLength="20" />
+            <Button Grid.Row="0"
+                    Grid.Column="2"
+                    Content="Generieren"
+                    Command="{Binding GenerateAccountNumberCommand}"
+                    Margin="5"
+                    Padding="10,5"
+                    ToolTip="Automatische Kontonummer generieren" />
+
+            <!-- Customer -->
+            <Label Grid.Row="1"
+                   Grid.Column="0"
+                   Content="Kunde *" />
+            <ComboBox Grid.Row="1"
+                      Grid.Column="1"
+                      Grid.ColumnSpan="2"
+                      ItemsSource="{Binding Customers}"
+                      SelectedItem="{Binding SelectedCustomer}"
+                      DisplayMemberPath="FullName"
+                      IsSynchronizedWithCurrentItem="True" />
+
+            <!-- Start Saldo -->
+            <Label Grid.Row="2"
+                   Grid.Column="0"
+                   Content="Start Saldo" />
+            <TextBox Grid.Row="2"
+                     Grid.Column="1"
+                     Grid.ColumnSpan="2"
+                     Text="{Binding Account.StartBalance, StringFormat={}{0:N2}}"
+                     MaxLength="15" />
+
+            <!-- Current Saldo (only Edit-Mode) -->
+            <Label Grid.Row="3"
+                   Grid.Column="0"
+                   Content="Aktueller Saldo"
+                   Visibility="{Binding IsEditMode, Converter={x:Static converters:BoolToVisibilityConverter.Instance}}" />
+            <TextBox Grid.Row="3"
+                     Grid.Column="1"
+                     Grid.ColumnSpan="2"
+                     Text="{Binding Account.CurrentBalance, StringFormat={}{0:N2}}"
+                     IsReadOnly="True"
+                     Background="LightGray"
+                     Visibility="{Binding IsEditMode, Converter={x:Static converters:BoolToVisibilityConverter.Instance}}" />
+
+            <!-- Customer Info -->
+            <Border Grid.Row="4"
+                    Grid.Column="0"
+                    Grid.ColumnSpan="3"
+                    Background="LightBlue"
+                    BorderBrush="DarkBlue"
+                    BorderThickness="1"
+                    Margin="5"
+                    Padding="10"
+                    Visibility="{Binding SelectedCustomer, Converter={x:Static converters:NullToVisibilityConverter.Instance}}">
+                <StackPanel>
+                    <TextBlock Text="Ausgewählter Kunde:"
+                               FontWeight="Bold" />
+                    <TextBlock Text="{Binding SelectedCustomer.FullName}" />
+                    <TextBlock Text="{Binding SelectedCustomer.FullAddress}" />
+                    <TextBlock Text="{Binding SelectedCustomer.Phone}" />
+                    <TextBlock Text="{Binding SelectedCustomer.Email}" />
+                </StackPanel>
+            </Border>
+        </Grid>
+
+        <!-- Buttons -->
+        <Border Grid.Row="1"
+                Background="LightGray"
+                Padding="5"
+                Margin="0,10,0,0">
+            <StackPanel Orientation="Horizontal"
+                        HorizontalAlignment="Right">
+                <Button Content="{Binding SaveButtonText}"
+                        Command="{Binding SaveCommand}"
+                        Background="#FF008000"
+                        Foreground="White"
+                        FontWeight="Bold" />
+
+                <Button Content="Abbrechen"
+                        Command="{Binding CancelCommand}"
+                        Background="#FFDC143C"
+                        Foreground="White" />
+            </StackPanel>
+        </Border>
+    </Grid>
+</Window>

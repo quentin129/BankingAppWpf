@@ -1,0 +1,69 @@
+﻿<Application x:Class="BankingAppWpf.App"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="clr-namespace:BankingAppWpf"
+             Startup="Application_Startup">
+    <Application.Resources>
+        <Style TargetType="TextBox"
+               x:Key="DefaultTextBox">
+            <Setter Property="Margin"
+                    Value="5" />
+            <Setter Property="Padding"
+                    Value="3" />
+            <Setter Property="VerticalContentAlignment"
+                    Value="Center" />
+        </Style>
+
+        <Style TargetType="Label"
+               x:Key="DefaultLabel">
+            <Setter Property="Margin"
+                    Value="5,5,0,0" />
+            <Setter Property="Padding"
+                    Value="0,0,0,2" />
+            <Setter Property="FontWeight"
+                    Value="SemiBold" />
+        </Style>
+
+        <Style TargetType="ComboBox"
+               x:Key="DefaultComboBox">
+            <Setter Property="Margin"
+                    Value="5" />
+            <Setter Property="Padding"
+                    Value="3" />
+            <Setter Property="VerticalContentAlignment"
+                    Value="Center" />
+        </Style>
+
+        <Style TargetType="Button"
+               x:Key="DefaultButton">
+            <Setter Property="Margin"
+                    Value="10,5" />
+            <Setter Property="Padding"
+                    Value="15,8" />
+            <Setter Property="MinWidth"
+                    Value="80" />
+        </Style>
+
+        <Style TargetType="DatePicker"
+               x:Key="DefaultDatePicker">
+            <Setter Property="Margin"
+                    Value="5" />
+            <Setter Property="Padding"
+                    Value="3" />
+            <Setter Property="VerticalContentAlignment"
+                    Value="Center" />
+        </Style>
+
+        <!-- Standard-Styles -->
+        <Style TargetType="TextBox"
+               BasedOn="{StaticResource DefaultTextBox}" />
+        <Style TargetType="Label"
+               BasedOn="{StaticResource DefaultLabel}" />
+        <Style TargetType="ComboBox"
+               BasedOn="{StaticResource DefaultComboBox}" />
+        <Style TargetType="Button"
+               BasedOn="{StaticResource DefaultButton}" />
+        <Style TargetType="DatePicker"
+               BasedOn="{StaticResource DefaultDatePicker}" />
+    </Application.Resources>
+</Application>
